@@ -1,2 +1,2 @@
 # Delivery-Jokes_Backend
-This is the Delievery Jokes Backend Service
+The Full Stack Developer Test by Coduza (Pvt) Ltd
