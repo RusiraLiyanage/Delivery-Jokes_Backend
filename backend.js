@@ -3,7 +3,15 @@ const app = express();
 const mongoose = require('mongoose');
 mongoose.set('strictQuery',false);
 const PORT = 8060;
+var cors = require('cors');
+mongoose.set('strictQuery',false);
 app.use(express.json())
+app.use(cors())
+
+var corsOptions = {
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 // Mongo DB connection establishment and model initializations
 const connectDB = async () => {
@@ -19,7 +27,7 @@ const connectDB = async () => {
     Jokes_model = mongoose.model("jokes",jokesSchema)
 }
 // api call to retriew a random joke from the database
-app.get('/random-joke', async (req,res) => {
+app.post('/random-joke', cors(corsOptions), async (req,res) => {
     const {joke_type} = req.body;
     const data = await Jokes_model.find({"type":joke_type});
     // maipulation to get a random joke
@@ -33,9 +41,10 @@ app.get('/random-joke', async (req,res) => {
     return res.json({status: "ok", data: random_joke});
 });
 // api call to retriew all joke types to be shown in the list
-app.get('/joke-types', async (req,res) => {
+app.get('/joke-types', cors(corsOptions), async (req,res) => {
     const joke_types = await Jokes_model.find();
     var typesArray = new Array();
+    typesArray.push('');
     joke_types.forEach(element => {
         console.warn(element.type)
         if(!typesArray.includes(element.type)){
